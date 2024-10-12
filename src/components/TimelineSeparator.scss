@@ -1,0 +1,58 @@
+.main-box{
+    margin-left: -31px;
+    padding-right: 27px;
+
+    .connector{
+        // display: flex;
+        // flex-direction: column;
+        // flex: 0 1 0%;
+        // -webkit-box-align: center;
+        // align-items: center;
+        background-color: rgb(189, 189, 189);;
+        // border: 1px solid;
+        width: 4px;
+        height: 111%;
+        margin-bottom: -20px;
+        margin-left: 8px;
+    }
+    
+    .cycle {
+        display: flex;
+        // align-self: baseline;
+        // height: 11px;
+        // width: 11px;
+        border-style: solid;
+        border-width: 6px;
+        padding: 5px;
+        border-radius: 50%;
+        // margin: -162px 0px;
+        margin-top: 51px;
+        border-color: transparent;
+        color: rgb(250, 250, 250);
+        background-color: rgb(189, 189, 189);
+        margin-right: 2px;
+    }
+
+    .cycle_active {
+        width: 11px; /* Size of the outer circle */
+        height: 11px; /* Same height to keep it a circle */
+        border: 2px solid rgb(4,103,152); /* Blue border */
+        border-radius: 50%; /* Fully rounded corners to make it a circle */
+        padding: 5px; /* White space or gap between the blue border and red circle */
+        display: flex;
+        justify-content: center; /* Centers the inner circle horizontally */
+        align-items: center; /* Centers the inner circle vertically */
+        background-color: white; /* White background to form the white gap */
+        margin-left: -2px;
+        // margin-top: 0 -163px;
+        margin-top: 51px;
+        
+        .inner-circle {
+            width: 13px; /* Smaller red circle */
+            height: 11px;
+            background-color: rgb(4,103,152); /* Red circle background */
+            border-radius: 50%; /* Makes it circular */
+        }
+      }
+      
+}
