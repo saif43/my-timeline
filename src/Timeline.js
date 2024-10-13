@@ -1,10 +1,9 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import './Timeline.scss';
 import TimelineSeparator from './components/TimelineSeparator';
 
 // Helper to convert "9:30 PM" to Date object with today's date
 const convertToTime = (timeStr) => {
-    console.log("timeStr ===>", timeStr);
     const [time, modifier] = timeStr.split(' ');
     let [hours, minutes] = time.split(':');
     
@@ -278,14 +277,49 @@ const Timeline = () => {
             ]
         }
     ]
+
+    const getActiveTime = (routine) =>{
+        let active_task = null
+
+        routine.some((currentTask, index) => {
+            active_task = currentTask.time
+            const currentTaskTime = currentTask.time
+            const currentTaskDate = convertToTime(currentTaskTime);
+            
+            const nextTask = routine[index+1]
+
+            if(!nextTask){
+                return true;
+            }
+
+            const nextTaskTime = nextTask.time
+            const nextTaskDate = convertToTime(nextTaskTime);
+
+            console.log("currentTime ===>", currentTime);
+            console.log("currentTaskDate ===>", currentTaskDate);
+            console.log("nextTaskDate ===>", nextTaskDate);
+            console.log("currentTaskDate <= currentTime && currentTime < nextTaskDate ===>", currentTaskDate <= currentTime && currentTime < nextTaskDate);
+            
+            if(currentTaskDate <= currentTime && currentTime < nextTaskDate){
+                // setActiveTaskTime(currentTask.time)
+                // console.log("activeTaskTime ===>", activeTaskTime);
+
+                console.log('=================================');
+                return true
+            }
+        });
+
+        return active_task;
+    }
     
     // Function to render routine items
     const renderRoutine = (routine) => {
+        const active_time = getActiveTime(routine);
         return routine.map((item, index) => (
         <div key={index} className="timeline-event">
-            <div className="time-label">{item.time}</div>
-            <TimelineSeparator active={isTaskActive(item.time)} />
-            <div className="event-content">
+            <div className={`time-label ${isActiveTask(active_time, item.time) ? "active" : ""}`}>{item.time}</div>
+            <TimelineSeparator active={isActiveTask(active_time, item.time)} />
+            <div className={`event-content ${isActiveTask(active_time, item.time) ? "active" : ""}`}>
             <h3>{item.title}</h3>
             <ul>
                 {item.tasks.map((task, i) => (
@@ -297,11 +331,10 @@ const Timeline = () => {
         ));
     };
 
-    // Function to check if a task is active
-    const isTaskActive = (taskTime) => {
-        const taskDate = convertToTime(taskTime);
-        return currentTime >= taskDate && currentTime < new Date(taskDate.getTime() + 30 * 60000); // Active for 30 minutes
-    };
+    const isActiveTask = (active_time, task_time) => {
+        return active_time === task_time
+    }
+
 
     return (
         <div className="timeline">
@@ -331,6 +364,13 @@ const Timeline = () => {
         <h2>{isWorkingDay ? 'Working Day' : 'Holiday'}</h2>
 
         <div>{isWorkingDay ? renderRoutine(working_days_routine) : renderRoutine(holidays_routine)}</div>
+
+        <div class="search-container">
+        <button class="search-button">
+            <i class="fas fa-search"></i>
+        </button>
+        </div>
+
         </div>
     );
 };

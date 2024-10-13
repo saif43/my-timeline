@@ -33,6 +33,11 @@
         padding-top: 53px;
         color: #333;
         width: 100px;
+
+      }
+
+      .time-label.active {
+        color: #007BFF;
       }
   
       .event-content {
@@ -41,6 +46,7 @@
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         width: 300px;
+        border-color: #007BFF;
   
         h3 {
           font-size: 20px;
@@ -63,6 +69,10 @@
           }
         }
       }
+
+      .event-content.active {
+        border: 3px solid #007BFF;
+      }
   
     //   &::before {
     //     content: "";
@@ -77,5 +87,29 @@
     // .timeline-event:last-child::before {
     //   display: none;
     // }
+
+
+    .search-button {
+      position: fixed;
+      right: 20px;  /* Distance from the right edge */
+      bottom: 20px; /* Distance from the bottom edge */
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 1000; /* Ensures it's on top of other elements */
+    }
+    
+    .search-button i {
+      font-size: 20px;
+    }
+    
+    .search-button:hover {
+      background-color: #0056b3;
+    }
+    
   }
   

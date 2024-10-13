@@ -13,6 +13,7 @@ function Cycle({ active }) {
 }
 
 const TimelineSeparator = ({active}) => {
+  console.log("active ===>", active);
   return (
     <div className="main-box">
         <Cycle active={active} />
