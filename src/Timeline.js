@@ -17,6 +17,15 @@ const convertToTime = (timeStr) => {
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 };
 
+const getRefs = (routine) => {
+    const refs = routine.reduce((acc, item) => {
+        acc[item.time] = useRef(null);
+        return acc;
+    }, {});
+
+    return refs;
+}
+
 const Timeline = () => {
 
     const [isWorkingDay, setIsWorkingDay] = useState(true); // State to track selected day type
@@ -295,28 +304,23 @@ const Timeline = () => {
             const nextTaskTime = nextTask.time
             const nextTaskDate = convertToTime(nextTaskTime);
 
-            console.log("currentTime ===>", currentTime);
-            console.log("currentTaskDate ===>", currentTaskDate);
-            console.log("nextTaskDate ===>", nextTaskDate);
-            console.log("currentTaskDate <= currentTime && currentTime < nextTaskDate ===>", currentTaskDate <= currentTime && currentTime < nextTaskDate);
-            
             if(currentTaskDate <= currentTime && currentTime < nextTaskDate){
-                // setActiveTaskTime(currentTask.time)
-                // console.log("activeTaskTime ===>", activeTaskTime);
-
-                console.log('=================================');
                 return true
             }
         });
 
         return active_task;
     }
+
+    // Create refs object where each key is the 'time' from the array objects
+    const active_routine = isWorkingDay ? working_days_routine : holidays_routine;
+    const refs = getRefs(active_routine)
     
     // Function to render routine items
     const renderRoutine = (routine) => {
         const active_time = getActiveTime(routine);
         return routine.map((item, index) => (
-        <div key={index} className="timeline-event">
+        <div ref={refs[item.time]} key={index} className="timeline-event">
             <div className={`time-label ${isActiveTask(active_time, item.time) ? "active" : ""}`}>{item.time}</div>
             <TimelineSeparator active={isActiveTask(active_time, item.time)} />
             <div className={`event-content ${isActiveTask(active_time, item.time) ? "active" : ""}`}>
@@ -333,7 +337,18 @@ const Timeline = () => {
 
     const isActiveTask = (active_time, task_time) => {
         return active_time === task_time
-    }
+    };
+
+    const scrollToItem = () => {
+        const active_routine = isWorkingDay ? working_days_routine : holidays_routine;
+        const active_time = getActiveTime(active_routine);
+        const ref = refs[active_time];
+        if (ref && ref.current) {
+            ref.current.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            console.error('Ref not found for the specified time');
+        }
+    };
 
 
     return (
@@ -365,9 +380,9 @@ const Timeline = () => {
 
         <div>{isWorkingDay ? renderRoutine(working_days_routine) : renderRoutine(holidays_routine)}</div>
 
-        <div class="search-container">
-        <button class="search-button">
-            <i class="fas fa-search"></i>
+        <div className="search-container">
+        <button className="search-button" onClick={scrollToItem}>
+            <i className="fas fa-search"></i>
         </button>
         </div>
 
