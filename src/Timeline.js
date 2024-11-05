@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef  } from 'react';
+import React, { useState, useEffect, useMemo  } from 'react';
 import './Timeline.scss';
 import TimelineSeparator from './components/TimelineSeparator';
 
@@ -17,14 +17,6 @@ const convertToTime = (timeStr) => {
     return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 };
 
-const getRefs = (routine) => {
-    const refs = routine.reduce((acc, item) => {
-        acc[item.time] = useRef(null);
-        return acc;
-    }, {});
-
-    return refs;
-}
 
 const Timeline = () => {
 
@@ -100,13 +92,6 @@ const Timeline = () => {
             title: 'Dhuhr Prayer',
             tasks: [
                 'Pray Dhuhr and then have lunch, preferably something light and healthy.'
-            ]
-        },
-        {
-            time: '2:30 PM',
-            title: 'Lunch Break',
-            tasks: [
-                'Healthy lunch with vegetables, lean protein, and whole grains. Avoid heavy or overly spicy meals.'
             ]
         },
         {
@@ -314,7 +299,13 @@ const Timeline = () => {
 
     // Create refs object where each key is the 'time' from the array objects
     const active_routine = isWorkingDay ? working_days_routine : holidays_routine;
-    const refs = getRefs(active_routine)
+
+    const refs = useMemo(() => {
+        return active_routine.reduce((acc, item) => {
+            acc[item.time] = React.createRef();
+            return acc;
+        }, {});
+    }, [isWorkingDay]);
     
     // Function to render routine items
     const renderRoutine = (routine) => {
